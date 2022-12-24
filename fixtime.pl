@@ -4,7 +4,7 @@ use POSIX qw/ceil/;
 
 # Minimum, maximum, and increment (minutes)
 $min = 5;
-$max = 15;
+$max = 35;
 $inc = 15;
 
 # Convert e.g. "12:03 PM" to raw minutes
@@ -36,14 +36,29 @@ sub fwd {
   return $m2;
 }
 
+BEGIN {
+  @e = ();
+}
+
 print;
 
 $day = shift @F;
-@inc_list = ($day);
 
-foreach (@F) {
-  push @inc_list, m2h(fwd(h2m())) . " " x 3;
+@i = map { h2m() } @F;
+
+if ($. > 1) {
+  foreach $n (0..$#F) {
+    if ($min < $e[$n] - $i[$n] && $e[$n] - $i[$n] < $max) {
+      $i[$n] = $e[$n];
+    } else {
+      $i[$n] = fwd($i[$n]);
+    }
+  }
+} else {
+  @i = map { fwd($_) } @i;
 }
 
-print join "\t", @inc_list;
+@e = @i;
+
+print join "\t", ($day, map { m2h($_) . " " x 3 } @i);
 print "\n";

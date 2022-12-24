@@ -42,7 +42,7 @@ $day = shift @F;
 @inc_list = ($day);
 
 foreach (@F) {
-  push @inc_list, m2h(fwd(h2m())) . " " x 4;
+  push @inc_list, m2h(fwd(h2m())) . " " x 3;
 }
 
 print join "\t", @inc_list;
